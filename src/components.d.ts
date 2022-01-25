@@ -78,6 +78,7 @@ export namespace Components {
           * Properties
          */
         "clientID": string;
+        "fileid": string;
         "filename": string;
         "filetype": string;
         "fileurl": string;
@@ -87,9 +88,11 @@ export namespace Components {
         "authapihosturl": string;
         "clientid": string;
         "custom": boolean;
+        "fileid": string;
         "filename": string;
         "filetype": string;
         "fileurl": string;
+        "getBlobSasUri": () => Promise<string>;
         "hidelogin": boolean;
         /**
           * Public methods
@@ -348,6 +351,7 @@ declare namespace LocalJSX {
           * Properties
          */
         "clientID"?: string;
+        "fileid"?: string;
         "filename"?: string;
         "filetype"?: string;
         "fileurl"?: string;
@@ -365,6 +369,7 @@ declare namespace LocalJSX {
         "authapihosturl"?: string;
         "clientid"?: string;
         "custom"?: boolean;
+        "fileid"?: string;
         "filename"?: string;
         "filetype"?: string;
         "fileurl"?: string;

@@ -15,6 +15,7 @@ export class EzpPrinting {
   @Prop() redirecturi: string
   @Prop() filename: string
   @Prop() fileurl: string
+  @Prop() fileid: string
   @Prop() filetype: string
   @Prop() custom: boolean
   @Prop() hidelogin: boolean
@@ -81,6 +82,27 @@ export class EzpPrinting {
     }
   }
 
+  @Method()
+  async getBlobSasUri(): Promise<string> {
+    
+    if (!authStore.state.isAuthorized) {
+      this.authOpen = true
+    } 
+    else
+    {
+      const printService = new EzpPrintService(this.redirecturi, this.clientid)
+      var resp = await printService.getPrepareUpload(authStore.state.accessToken).catch(() => {
+        authStore.state.isAuthorized = false
+      })
+      if (resp)
+        this.fileid = resp.fileid
+      else
+        return null;
+
+      return resp.sasUri
+    }
+  }
+
   checkAuth() {
     const printService = new EzpPrintService(this.redirecturi, this.clientid)
 
@@ -141,6 +163,7 @@ export class EzpPrinting {
             redirectURI={this.redirecturi}
             filename={this.filename}
             fileurl={this.fileurl}
+            fileid={this.fileid}
             filetype={this.filetype}
           />
         ) : this.custom ? (

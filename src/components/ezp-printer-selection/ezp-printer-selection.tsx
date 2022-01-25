@@ -39,6 +39,7 @@ export class EzpPrinterSelection {
   @Prop() redirectURI: string
   @Prop() filename: string
   @Prop() fileurl: string
+  @Prop() fileid: string
   @Prop() filetype: string
 
   /**
@@ -127,13 +128,16 @@ export class EzpPrinterSelection {
   /** Description... */
   private handlePrint = () => {
     this.printInProgress = true
-    this.printService
-      .printFileByUrl(
+
+    if (this.fileid)
+    {
+      this.printService
+      .printFileById(
         authStore.state.accessToken,
-        this.fileurl,
+        this.fileid,
         this.filetype,
         this.selectedPrinter.id,
-        // we have to initialse this obj with empty strings to display the select component
+        // we have to initialize this obj with empty strings to display the select component
         // but don't want to send any attributes with empty strings to the API
         removeEmptyStrings(this.selectedProperties),
         this.filename
@@ -164,6 +168,48 @@ export class EzpPrinterSelection {
           this.printInProgress = false
         }
       })
+
+    }
+    else
+    {
+      this.printService
+        .printFileByUrl(
+          authStore.state.accessToken,
+          this.fileurl,
+          this.filetype,
+          this.selectedPrinter.id,
+          // we have to initialize this obj with empty strings to display the select component
+          // but don't want to send any attributes with empty strings to the API
+          removeEmptyStrings(this.selectedProperties),
+          this.filename
+        )
+        .then((data) => {
+          if (data.jobid) {
+            printStore.state.jobID = data.jobid
+            const POLL_INTERVAL = 2000
+            const validateData = (data) => {
+              if (data.jobstatus === 0) {
+                this.printInProgress = false
+                return true
+              }
+              return false
+            }
+            poll({
+              fn: this.printService.getPrintStatus,
+              validate: validateData,
+              interval: POLL_INTERVAL,
+              maxAttempts: 10,
+            })
+              .then(data)
+              .catch((err) => {
+                console.warn(err)
+                this.printInProgress = false
+              })
+          } else {
+            this.printInProgress = false
+          }
+        })
+      }
     localStorage.setItem('properties', JSON.stringify(this.selectedProperties))
     localStorage.setItem('printer', JSON.stringify(this.selectedPrinter))
     localStorage.setItem(

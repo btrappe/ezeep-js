@@ -132,6 +132,41 @@ export class EzpPrintService {
     }).then((response) => response.json())
   }
 
+  printFileById(
+    accessToken: string,
+    fileid: string,
+    fileType: string,
+    printerID: string,
+    properties: PrinterProperties,
+    filename?: string,
+    printAndDelete?: boolean
+  ) {
+    return fetch(`https://${this.printingApi}/sfapi/Print/`, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fileid: fileid,
+        type: fileType,
+        printerid: printerID,
+        ...(filename && { alias: filename }),
+        ...(printAndDelete && { printanddelete: printAndDelete }),
+        properties,
+      }),
+    }).then((response) => response.json())
+  }
+
+  getPrepareUpload(accessToken: string) {
+    return fetch(`https://${this.printingApi}/sfapi/PrepareUpload/`, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+    }).then((response) => response.json())
+  }
+
   getPrintStatus = () => {
     return fetch(
       `https://${this.printingApi}/sfapi/Status/?id=${encodeURIComponent(printStore.state.jobID)}`,
@@ -147,6 +182,7 @@ export class EzpPrintService {
 const printStore = createStore({
   printers: [],
   jobID: '',
+  fileID: '',
   printFinished: false,
   printApiHostUrl: '',
 })
