@@ -115,13 +115,13 @@ export class EzpLabel {
 
 export declare interface EzpPrinterSelection extends Components.EzpPrinterSelection {}
 @ProxyCmp({
-  inputs: ['clientID', 'filename', 'filetype', 'fileurl', 'redirectURI']
+  inputs: ['clientID', 'filename', 'filetype', 'fileurl', 'fileid', 'redirectURI']
 })
 @Component({
   selector: 'ezp-printer-selection',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['clientID', 'filename', 'filetype', 'fileurl', 'redirectURI'],
+  inputs: ['clientID', 'filename', 'filetype', 'fileurl', 'fileid', 'redirectURI'],
   outputs: ['printCancel', 'printSubmit']
 })
 export class EzpPrinterSelection {
@@ -140,14 +140,14 @@ export class EzpPrinterSelection {
 
 export declare interface EzpPrinting extends Components.EzpPrinting {}
 @ProxyCmp({
-  inputs: ['authapihosturl', 'clientid', 'custom', 'filename', 'filetype', 'fileurl', 'hidelogin', 'printapihosturl', 'redirecturi'],
-  methods: ['open']
+  inputs: ['authapihosturl', 'clientid', 'custom', 'filename', 'filetype', 'fileurl', 'fileid', 'hidelogin', 'printapihosturl', 'redirecturi'],
+  methods: ['open', 'getBlobSasUri']
 })
 @Component({
   selector: 'ezp-printing',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['authapihosturl', 'clientid', 'custom', 'filename', 'filetype', 'fileurl', 'hidelogin', 'printapihosturl', 'redirecturi']
+  inputs: ['authapihosturl', 'clientid', 'custom', 'filename', 'filetype', 'fileurl', 'fileid', 'hidelogin', 'printapihosturl', 'redirecturi']
 })
 export class EzpPrinting {
   protected el: HTMLElement;
